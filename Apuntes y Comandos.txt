@@ -1,0 +1,819 @@
+COMANDOS DE ADMINISTRACIÓN LINUX
+
+	
+	TOUCH
+
+		touch -a fichero -> Cambia únicamente el tiempo de acceso
+
+		touch -m fichero -> Cambia únicamente el tiempo de modificación
+
+		touch -d "Fecha Válida" fichero -> Cambia la fecha y la hora de acceso y de modificación
+
+			Fechas Válidas:
+
+								- "YYYY-MM-dd hh:mm" -> "2022-11-15 17:30"
+
+								- "next month" -> Cambia la fecha al mes siguiente con la hora y el día actual
+
+								- "last month" -> Cambia la fecha al mes anterior con la hora y el día actual
+
+								- "today" -> Cambia la fecha al día actual 
+
+								- "next year" / "last year"
+
+								- "next week"
+
+								- "next monday"
+
+		touch -r fichero_de_referencia fichero -> Utiliza el tiempo del fichero de referencia en el fichero dado
+
+
+	CHMOD
+
+		chmod 000 fichero -> Cambia los permisos del fichero mediante bits (777, 644, 111...)
+
+		chmod u+x,g-x+rw,o-rwx fichero -> Cambia los permisos del fichero de forma individual
+
+
+	CHOWN
+
+		chown usuario fichero -> Cambia únicamente el usuario propietario del fichero
+
+		chown usuario:grupo fichero -> Cambia el usuario y el grupo propietarios del fichero a la vez
+
+
+	CHGRP
+
+		chgrp grupo fichero -> Cambia únicamente el grupo propietario del fichero
+
+
+	CUT
+
+		cut -d: -f1,2,3 fichero -> Obtiene el campo (-f) 1, 2 y 3 usando como delimitador de los campos (-d) ":" del fichero
+
+		cut -b 5 fichero -> Obtiene el byte número 5 del fichero (En cada línea)
+
+		cut -b 5,6 fichero -> Obtiene los bytes 5 y 6 del fichero (En cada línea)
+
+		cut -b 4-6 fichero -> Obtiene los bytes del 4 al 6 del fichero (En cada línea)
+
+		cut -c -> Igual que con los bytes, haciendo uso de los mismos rangos
+
+		cut -d: -f1,5 /etc/passwd | sort -t: -k2 -> Obtiene el campo 1 y 5 del fichero /etc/passwd y los ordena por el segundo campo obtenido (-t Delimitador usado para diferenciar los campos) (-k Campo por el que ordena)
+
+
+	SORT
+
+		sort -t: -k1 /etc/passwd -> Ordena el fichero por el campo 1 delimitado por el separador ":"
+
+		sort -n fichero -> Ordena numéricamente
+
+		sort -r fichero -> Ordena al revés el fichero (Por defecto ordena alfabéticamente)
+
+		sort -u fichero -> Ordena el fichero e imprime solo los únicos
+
+
+	GREP
+
+		grep -v patrón fichero -> Busca en el fichero todo lo contrario a lo especificado en el patrón
+
+			grep -v bash /etc/passwd -> Busca en el fichero passwd todas las cadenas que no contengan "bash"
+
+		grep -E regex fichero -> Hace uso de las expresiones regulares (regex) para encontrar el patrón en el fichero
+
+		grep -c patrón fichero -> Cuenta el número de ocurrencias que cumplan con el patrón especificado
+
+		grep -x patrón fichero -> Selecciona únicamente aquellas líneas que cumplan el patrón al completo
+
+			grep -x -E "[a-z]{3}" -> Mostrará solo aquellas líneas que se compongan de 3 letras de la "a" a la "z"
+
+
+	NL
+
+		nl fichero -> Enumera cada una de las líneas del fichero
+
+
+	WC
+
+		wc -w fichero -> Cuenta el número de palabras en el fichero
+
+		wc -l fichero -> Cuenta el número de líneas en el fichero
+
+
+	UNIQ (Se recomienda hacer un sort del documento para que "uniq" funcione mejor)
+
+		uniq -c fichero -> Enumera en cada línea el número de ocurrencias
+
+		uniq -d fichero -> Solo muestra los elementos repetidos
+
+		uniq -u fichero -> Solo muestra los elementos únicos
+
+		uniq -i fichero -> Ignora las mayúsculas y minúsculas (insensitive)
+
+
+	PS
+
+		ps -e -> Muestra todos los procesos lanzados en el sistema
+
+		ps -C name -> Muestra un proceso cuyo nombre ejecutable o comando viene dando en "name"
+
+		ps -p PID -> Muestra un proceso que tenga el "Process ID" indicado en "PID"
+
+		ps -t TTY -> Muestra los procesos asociados a un terminal indicado en "TTY"
+
+			Para ver el identificador del terminal actual -> tty (Devuelve por ejemplo -> /dev/pts/1 -> pts/1)
+
+		ps -u user -> Muestra todos los procesos asociados al usuario "user"
+
+		ps -e -f/-F -> Muestra todos los procesos del sistema en "Full Format" o "Extra Full Format"
+
+			Campos que muestra:
+
+									- UID -> User ID
+
+									- PID -> Process ID
+
+									- PPID -> Parent Process ID (ID del proceso padre que generó al proceso hijo)
+
+									- C -> Porcentaje de CPU que está siendo usado por el proceso
+
+									- STIME -> Hora de inicio del proceso
+
+									- TTY -> Terminal usada por el proceso
+
+									- TIME -> Tiempo durante el que el proceso ha usado CPU
+
+									- CMD -> Comando o programa ejecutado
+
+		ps -p PID -f -> Buscar un proceso por su PID y mostrar el resultado en "Full Format"
+
+		ps -u usuario -f -> Buscar un proceso por usuario y mostrar el resultado en "Full Format"
+
+		ps -o -> Muestra en la salida los headers que se especifiquen (A continuación se muestra un ejemplo)
+
+		ps -e -opid,cputime,comm -> Muestra el PID, el TIME usado por la cpu, y el COMANDO ejecutado por todos los procesos del sistema
+
+			Headers a especificar con la opción -o:
+
+														- cmd -> Comando extenso
+
+														- comm -> Nombre del comando
+
+														- cputime/time -> TIME usado por CPU
+
+														- gid -> Group ID
+
+														- group -> Group Name
+
+														- pcpu -> % de CPU
+
+														- pid -> Process ID
+
+														- pmem -> % de memoria
+
+														- ppid -> Parent Process ID
+
+														- start_time/stime -> Hora de inicio del proceso
+
+														- tname -> Terminal en la que se lanzó el proceso
+
+														- uid -> User ID del usuario que lanzó el proceso
+
+														- uname -> Nombre del usuario que lanzó el proceso
+
+		ps --sort key -> Ordena por la clave (formato) especificada
+
+			ps -e --sort -time -> Ordena todos los procesos del sistema por tiempo que han usado la CPU (De forma reversa "-" time)
+
+			ps -e --sort uname -> Ordena alfabéticamente por el nombre del usuario que lanzó el proceso
+
+
+	FIND
+
+		find directorio -maxdepth 1 -> Busca todos los ficheros y directorios en una profundidad de 1
+
+			find /home/danibz -maxdepth 1
+
+		find directorio -amin n -> El fichero buscado fue accedido por última vez hace "n" minutos
+
+			-amin -10 -> Fue accedido hace menos de 10 min
+
+			-amin +10 -> Fue accedido hace más de 10 min
+
+		find directorio -atime n -> El fichero fue accedido hace n*24 horas
+
+		find directorio -executable -> Busca ficheros ejecutables o directorios que se pueden traspasar
+
+		find directorio -iname patron -> Busca por nombre de forma insensitiva (No tiene en cuenta las mayúsculas)
+
+		find directorio -mmin n -> El fichero fue modificado hace "n" minutos
+
+		find directorio -mtime n -> El fichero fue modificado hace n*24 horas
+
+		find directorio -name patron -> Busca por el nombre del fichero de forma estricta
+
+		find directorio -perm mode -> Busca en base a los bits de permiso especificados en "mode"
+
+			find . -perm 755 -> Busca los ficheros y directorios con permisos rwxr-xr-x en el directorio actual
+
+		find directorio -size n[cwbkMG] -> Busca por tamaño de archivo
+
+			find . -size +5k -> Busca en el directorio actual ficheros y directorios de más de 5 Kilobytes de tamaño
+
+		find directorio -type c -> Busca por tipo
+
+			Tipos:
+
+					- d -> Directorio
+
+					- f -> Fichero
+
+					- l -> Link Simbólico
+
+			find . -type f -> Busca ficheros
+
+		find directorio -uid n -> Busca por el UID del propietario
+
+			find . -uid 1000 -> Busca los ficheros y directorios pertenecientes al usuario con UID 1000
+
+		find directorio -user name -> Busca por el nombre del propietario de los ficheros y/o directorios
+
+		find directorio -delete -> Borra todos aquellos ficheros que sean encontrados por el find
+
+		find directorio -exec command {} \; -> Ejecuta el comando "command" a todos los resultados "{}"
+
+			find . -type f -exec basename {} \; -> Ejecuta basename a todos los ficheros encontrados
+
+		find directorio -printf format -> Imprime lo que se especifique en "format"
+
+			find . -type f -printf "%a\n" -> Imprime el tiempo de acceso de cada fichero encontrado y añade una nueva línea
+
+				Format:
+
+							- \n -> Nueva línea
+
+							- \r -> Retorno de carro
+
+							- \t -> Tabulador
+
+							- %a -> Último acceso (Tiempo)
+
+							- %f -> Nombre del fichero encontrado sin la ruta del mismo (Basename)
+
+							- %M -> Permisos del fichero encontrado en formato rwxr-xr-x
+
+							- %p -> Nombre del archivo con la ruta
+
+							- %s -> Tamaño del fichero o directorio en bytes
+
+							- %t -> Última modificación del archivo
+
+							- %u -> Nombre del propietario
+
+							- %U -> UID del propietario
+
+							- %y -> Tipo de archivo
+
+			find directorio -ls -> Lista los ficheros y directorios encontrados con sus respectivos permisos (ll)
+
+
+			***Siguientes a redactar -> stat, basename, dirname, readlink, sed, head, tail, cmp, diff, vectores en bash, strings en bash, regex
+
+
+
+GESTIÓN DE USUARIOS LINUX
+
+
+	MODO MANUAL CREACIÓN DE USUARIOS
+
+		vipw -> Edita fichero /etc/passwd y le hace un "lock" para que otro usuario no lo modifique a la vez
+
+			:x -> Salir del modo edición
+
+		vipw -s -> Editar fichero /etc/shadow
+
+			Si se especifica !! en el segundo campo en lugar de un hash -> No tiene clave
+
+			:x! -> Se fuerza la edición para salir (Porque /etc/shadow no tiene permiso de escritura)
+
+		vigr -> Editar fichero /etc/group
+
+		vigr -s -> Editar cihero /etc/gshadow
+
+		/etc/skel -> Tiene los ficheros básicos que debe haber en el directorio home de un usuario
+
+			cp -r /etc/skel /home/nuevo-usuario
+
+			Todo lo que se ponga en este directorio lo tendran los usuarios nuevos que se creen (Carpetas, ficheros...)
+
+
+	COMANDOS ÚTILES
+
+
+		USERADD
+
+			useradd -g prueba -c "Comentario" -d /home/usuario1 -s /bin/bash usuario1
+
+				-g -> Grupo primario (Debe existir) / --gid -> Id del grupo primario a asignar
+
+				-c -> Comentario
+
+				-d -> Directorio
+
+				-s -> Shell
+
+			useradd -e YYYY-MM-DD usuario -> Crea un usuario y se le añade una fecha de expiración (Fecha en la que la cuenta será desactivada)
+
+			useradd -f n usuario -> Crea un usuario y se le indica el número de días (n) que pasarán después de que la contraseña haya expirado antes de que la cuenta se desactive permanentemente
+
+			useradd -G grupo1,grupo2,grupo3 usuario -> Crea el usuario y le añade todos los grupos indicados como grupos secundarios
+
+			useradd -k usuario -> Crea el usuario, y si se ha especificado la opción -m (Crea el directorio home del usuario), se copiarán en dicho directorio todos los ficheros y directorios contenidos en el directorio usado como skel, sino, añadirá el contenido del directorio skel por defecto
+
+			useradd -m usuario -> Crea el directorio home del usuario
+
+			useradd -M usuario -> Crea el usuario sin un directorio home
+
+			useradd -u UID usuario -> Crea un usuario con el UID indicado
+
+
+		USERMOD (Una vez creado el usuario, permite hacer modificaciones)
+
+
+			usermod -c "Comentario" usuario -> Modifica el commentario del usuario indicado
+
+			usermod -d directorio usuario -> Cambia el directorio de login del usuario
+
+			usermod -e YYYY-MM-DD usuario -> Cambia la fecha de expiración de la cuenta del usuario. La cuenta se desactivará el día especificado. Si la fecha se deja vacía, se desactiva la expiración de la cuenta
+
+			usermod -f n usuario -> Indica el número de días después de que la contraseña caduque antes de que la cuenta se desactive. Si se indica un 0, la cuenta será desactivada el día que la contraseña caduque
+
+			usermod -g grupo usuario -> Cambia el grupo primario/inicial del usuario
+
+			usermod -G grupo1,grupo2,grupo3 usuario -> Usa la lista de grupos como los grupos secundarios del usuario indicado
+
+			usermod -a -G grupo1,grupo2,grupo3 usuario -> Añade el usuario a la lista de grupos indicados, sin eliminar al usuario de los grupos a los que ya está asignado (Gracias a la opción -a). Modifica los grupos secundarios
+
+			usermod -l newName usuario -> Cambia el nombre del usuario
+
+			usermod -L usuario -> Bloquea usuario y no le deja iniciar sesión
+
+			usermod -s shell usuario -> Cambia el shell del usuario 
+
+			usermod -u UID usuario -> Cambia el UID del usuario
+
+			usermod -U usuario -> Desbloquea el usuario
+
+
+		USERDEL
+
+
+			userdel -r usuario -> Borra el usuario indicado junto con su directorio HOME
+
+
+		GROUPADD
+
+
+			groupadd -g GID grupo -> Crea un grupo con el GID especificado
+
+
+		GROUPMOD
+
+
+			groupmod -g GID grupo -> Cambia el GID del grupo especificado
+
+			groupmod -n newName grupo -> Cambia el nombre del grupo
+
+
+		GROUPDEL
+
+
+			groupdel group -> Borra el grupo
+
+
+		PASSWD
+
+
+			passwd usuario -> Establece la contraseña del usuario (Se debe introducir la contraseña de forma interactiva)
+
+			passwd -l usuario -> Bloquea la contraseña del usuario
+
+			passwd -u usuario -> Desbloquea la contraseña del usuario
+
+			passwd -d usuario -> Borra la contraseña del usuario (No tiene contraseña y puede acceder cualquiera)
+
+			passwd -e usuario -> Expira la contraseña del usuario en el momento. De tal manera que el usuario la tendrá que cambiar en su próximo inicio de sesión
+
+			passwd -n DAYS usuario -> Indica el número de días mínimo que deben pasar antes de que se pueda cambiar la contraseña del usuario
+
+			passwd -x DAYS usuario -> Indica el número de días máximo durante los cuales la contraseña será válida
+
+			passwd -w DAYS usuario -> Indica el número de días de antelación con los que se enviarán mensajes de aviso al usuario antes de que expire su contraseña
+
+			passwd -i DAYS usuario -> Establece el número de días que pasarán después de que la contraseña de un usuario haya expirado hasta que la cuenta quede permanentemente desactivada. El usuario deberá cambiar la contraseña una vez expirada antes de que se venza este plazo de gracia.
+
+			cat fichero.txt | passwd --stdin usuario -> Establece la contraseña del usuario con el contenido del fichero 
+
+
+		GPASSWD (Los administradores de un grupo pueden hacer uso de este comando para gestionar el grupo)
+
+
+			gpasswd group -> Establece la contraseña de un grupo
+
+			gpasswd -A user[user2,user3,user4...] group -> Hace administrador al usuario o usuarios indicados del grupo
+
+			gpasswd -a user group -> Añade a un determinado usuario a un grupo
+
+			gpasswd -d user group -> Elimina el usuario indicado del grupo
+
+			gpasswd -r group -> Elimina la contraseña que se haya establecido en el grupo, por lo tanto, solo podrán acceder los usuarios que sean miembros del grupo
+
+			gpasswd -R group -> Restringe el acceso al grupo (Coloca un ! en el campo contraseña del fichero gshadow), por lo que solo podrán acceder los miembros
+
+			gpasswd -M user1[user2,user3...] group -> Establece la lista de usuarios miembros del grupo (Machaca lo anterior)
+
+
+		NEWGRP
+
+
+			newgrp grupo -> Cambia el grupo inicial por el grupo indicado
+
+						 -> Se ejecuta como un subproceso
+
+						 -> Si el grupo indicado no se encuentra entre los secundarios del usuario, se solicita contraseña
+
+
+		CHAGE
+
+
+			chage usuario -> Cambia de forma interactiva los datos del usuario (Cuenta y contraseña)
+
+			chage -l usuario -> Da información acerca de la cuenta y la contraseña del usuario
+
+			chage -E YYYY-MM-DD usuario -> Establece la fecha en la que la cuenta del usario dejará de ser accesible
+
+			chage -I DAYS usuario -> Establece el número de días que pasarán antes de que se desactive la cuenta una vez la contraseña haya expirado
+
+			chage -m MIN_DAYS usuario -> Establece el número de días mínimo que deben pasar antes de modificar la contraseña
+
+			chage -M MAX_DAYS usuario -> Establece el número de días máximo en los que la contraseña será válida, cuando se llegue al último día la contraseña expirará
+
+			chage -W DAYS usuario -> Establece el número de días con antelación en los que se mandará un aviso al usuario de que la contraseña va a expirar
+
+
+
+COPIAS DE SEGURIDAD Y CRONTAB
+
+
+	TAR
+
+
+		tar cf archivo.tar fichero1 fichero2 -> Crea (c) un archivo tar con el nombre (f) "archivo.tar" de los dos ficheros indicados al final
+
+		tar tf archivo.tar -> Muestra (t) los contenidos del fichero tar (f) archivo.tar
+
+		tar xf archivo.tar -> Extrae (x) todos los ficheros del archivo (f) archivo.tar
+
+		tar rf archivo.tar fichero3 fichero4 -> Añade los ficheros al archivo tar ya creado
+
+		tar czf archivo.tgz fichero1 fichero2 -> Crea un fichero tar comprimido
+
+		tar czf archivo.tgz -T lista -> Crea un fichero tar comprimido de los archivos indicados en la lista pasada como opción
+
+		find /etc -mtime +10 | tar czf archivo.tgz -T - -> Crea un fichero tar comprimido a partir de la entrada estándar (Ficheros que el find va encontrando)
+
+
+
+VOLÚMENES LINUX
+
+	
+	FDISK
+
+
+		fdisk -l -> Lista todos los discos disponibles e información sobre sus particiones (Si las tienen)
+
+		fdisk /disco -> fdisk /dev/sdb -> Orden para gestionar el disco (Hacer particiones)
+
+
+	MKFS.EXT4
+
+
+		mkfs.ext4 -b 2048 -N 6000 /dev/sdb1 -> Crea un sistema de ficheros en la partición 1 del disco SDB, con un tamaño de bloque de 2048 bytes y 6000 inodes (Capacidad de 6000 ficheros)
+
+		mkfs.ext4 -L MEDIA /dev/sdb1 -> Crea un sistema de ficheros con etiqueta "MEDIA"
+
+
+	MOUNT
+
+
+		mount /sistema_de_ficheros_a_montar /directorio_destino -> Monta un sistema de ficheros en un directorio
+
+		mount -o remount /dev/sdb1 /mnt -> Vuelve a montar un sistema de ficheros
+
+
+	BLKID
+
+
+		blkid /dev/sdb1 -> Da información de la partición (ID de la partición y tipo de sistema de ficheros)
+
+
+	LVM (Explicación de comandos paso a paso)
+
+
+		-Una vez creadas las particiones de tipo LVM (8e) sobre un disco (sdc por ejemplo), se deberán crear los volúmenes físicos
+
+
+			pvcreate /dev/sdc1 -> Crea un volumen físico en la partición sdc1
+
+			pvdisplay, pvdisplay /dev/sdc1 -> Ver información acerca de los volúmenes físicos
+
+
+		-En segundo lugar, se deberá crear un grupo de volúmenes, el cual contendrá los volúmenes físicos que se hayan creado
+
+
+			vgcreate new_group /dev/sdb1 /dev/sdc1 -> Crea un nuevo grupo el cual contiene dos volúmenes físicos
+
+			vgdisplay, vgdisplay new_group -> Da información acerca del grupo virtual
+
+			vgextend new_group /dev/sdb2 -> Añade nuevos volúmenes físicos al grupo virtual
+
+
+		-A continuación, se deberá crear el volumen lógico correspondiente
+
+
+			lvcreate -L 2500 -n lvol0 new_group -> Creará un volumen lógico de 2,5GB llamado "lvol0" y perteneciente al grupo virtual "new_group"
+
+			lvdisplay, lvdisplay /dev/new_group/lvol0 -> Muestra información acerca de los volúmenes lógicos
+
+
+		-Una vez creado el volumen lógico, ha de crearse un sistema de ficheros para él
+
+
+			mkfs.ext4 -L MEDIA /dev/new_group/lvol0 -> Se crea un sistema de ficheros en el volumen lógico con la etiqueta "MEDIA"
+
+
+		-Ahora, puede montarse el sistema de ficheros en un directorio del sistema
+
+
+			mount /dev/new_group/lvol0 /mnt
+
+			mount -o remount,ro /dev/new_group/lvol0 -> Vuelve a montar el sistema de ficheros pero en modo solo lectura
+
+			mount -o remount,rw /dev/new_group/lvol0 -> Vuelve a montar el sistema de ficheros pero en modo lectura-escritura
+
+
+		-En caso de querer extender el tamaño del volumen lógico
+
+
+			lvextend -L +1000 /dev/new_group/lvol0 -> Extiende en 1GB el tamaño del volumen lógico
+
+
+		-Pero también se deberá extender el tamaño del sistema de ficheros para poder usar este espacio extra
+
+
+			-resize2fs /dev/new_group/lvol0 -> Reajusta el tamaño del sistema de ficheros
+
+
+		-Línea a introducir en el fichero /etc/fstab en caso de querer montar automáticamente en un directorio los volúmenes lógicos:
+
+
+			/dev/VG_ASO/lvol0	/var/media	ext4	defaults	1 2
+
+
+
+AUDITORÍA DE SISTEMAS DE FICHEROS
+
+
+	FSCK
+
+
+		Utilidad para verificar un sistema de ficheros. Para llevar a cabo la verificacion de un sistema de ficheros, primero se ha de desmontar (umount), después se debe hacer la verificación (fsck /dev/sdb1), y luego volver a montar (mount)	
+
+
+	TUNE2FS
+
+
+		Utilidad para visualizar y ajustar los parámetros asociados a un sistema de ficheros
+
+		tune2fs -c 1 /dev/VG_ASO/lvol0 -> Pone el parámetro "max-count" del sistema de ficheros a 1, lo que quiere decir que el máximo número de veces que el SF será montado antes de que se realice una comprobación es 1. En otras palabras, de esta manera se consigue que se compruebe la integridad del SF en cada reinicio del sistema (Cada vez que se monta)
+
+		tune2fs -l /dev/VG_ASO/lvol0 -> Muestra información sobre los parámetros de configuración del sistema de ficheros
+
+
+	DF
+
+
+		Muestra información acerca del espacio usado por un sistema de ficheros
+
+		df -h -> Muestra el espacio usado por cada SF y su punto de montaje (La -h indica que se muestren los datos de forma "human-readable")
+
+
+	DU
+
+
+		Utilidad que muestra el espacio ocupado por un fichero o directorio
+
+		du -sh /directorio -> Muestra el espacio total (-s) ocupado por un directorio, en formato "human-readable" (-h)
+
+	
+	LSBLK
+
+
+		Muestra información en forma de lista de los bloques que componen el sistema (Discos y particiones)
+
+		lsblk -> Muestra el listado de bloques
+
+		lsblk -f -> Muestra el listado de bloques con el tipo de sistema de ficheros, label, UUID y punto de montaje
+
+
+
+GESTIÓN DE CUOTAS LINUX
+
+
+	-En primer lugar, se ha de editar el fichero /etc/fstab para indicar que el volumen hará uso de las cuotas. El formato de la línea del fichero fstab tendrá el siguiente aspecto:
+
+		/dev/VG_ASO/lvol0   /var/media   ext4   defaults,usrquota,grpquota   1 2
+
+	-A continuación, se deberá montar el sistema de ficheros y, en caso de que ya estuviese montado, se deberá volver a montar de la siguiente manera:
+
+		mount -o remount /dev/VG_ASO/lvol0
+
+	-EL siguiente paso consistirá en habilitar las cuotas en el sistema de ficheros:
+
+		quotacheck -cug /dev/VG_ASO/lvol0 -> Esto creará dos ficheros en el directorio raíz del sistema de ficheros (aquota.user y aquota.group)
+
+	-Ahora, se deberán activar las cuotas a través del siguiente comando:
+
+		quotaon /dev/VG_ASO/lvol0
+
+	-Hay que establecer la política de cuotas. Se pueden establecer cuotas blandas (Las cuales permiten sobrepasarlas durante un periodo de gracia que hay que establecer), y cuotas duras (Las cuales una vez se llegue a su límite no permitirán añadir nada más al sistema de ficheros)
+
+	-Las cuotas se pueden establecer mediante bloques (Espacio en MB por ejemplo) y en inodes (Número de ficheros)
+
+	-Para editar las cuotas de un usuario se usa lo siguiente:
+
+		edquota -u usuario
+
+		-Se pueden especificar en ese fichero la cuota blanda y dura tanto de bloques como de inodes para ese usuario, para cada uno de los sistemas de ficheros disponibles que tengan las cuotas activadas
+
+		-Como el editor es vim, se usa "I" para escribir, "esc" para dejar de escribir, ":w" para guardar y ":q" para salir
+
+	-Para editar las cuotas de un grupo se haría de la siguiente forma:
+
+		edquota -g grupo
+
+	-Para copiar las cuotas de un usuario a otro:
+
+		edquota -p usuario_prototipo -u nuevo_usuario
+
+	-Una vez editadas las cuotas, se deberán establecer los periodos de gracia, que son el número de días en los que los usuarios pueden superar el límite blando de cuota. Una vez se venza el periodo de gracia el usuario no podrá escribir nada más en el sistema de ficheros si aún sigue sobrepasando el límite de cuota blanda
+
+	-Para editar los periodos de gracia de todos los sistemas de ficheros:
+
+		edquota -t
+
+	-Para editar los periodos de gracia de todos los usuarios:
+
+		edquota -t -u
+
+	-Para editar los periodos de gracia de todos los grupos:
+
+		edquota -t -g
+
+	-Para editar el periodo de gracia de un usuario concreto:
+
+		edquota -u -T usuario
+
+	-Para consultar el consumo de cuotas actuales se pueden usar los siguientes comandos:
+
+		* Hay que tener en cuenta que para visualizar la cuota de un usuario, este debe haber escrito algo en el SF previamente, para poder ver así su uso de cuota *
+
+		repquota -a -> Nos muestra información de las cuotas establecidas para todos los sistemas de ficheros
+
+		repquota /dev/VG_ASO/lvol0 -> Da información de cuotas de un único sistema de ficheros
+
+		quota -> Sirve para ver las cuotas establecidas para el usuario que ejecuta dicho comando (Para ver sus cuotas y uso, deberá haber escrito algo en el SF previamente)
+
+		quota -u usuario -> Comando útil para el root que sirve para ver las cuotas establecidas para un usuario en concreto
+
+	-Para desactivar las cuotas:
+
+		quotaoff /dev/VG_ASO/lvol0
+
+	-Si se desea volver a activarlas
+
+		quotacheck -ug /dev/VG_ASO/lvol0 -> Primero se revisan antes de volver a activarlas
+
+		quotaon /dev/VG_ASO/lvol0 -> Se activan
+
+
+
+RENDIMIENTO Y AFINAMIENTO DEL SISTEMA
+
+	
+	UPTIME
+
+		uptime -> Da información acerca de la carga de trabajo del sistema
+
+			-Tiempo Actual
+
+			-Tiempo que ha pasado el sistema en ejecución
+
+			-Cuantos usuarios están logeados en ese momento
+
+			-Carga del sistema en los intervalos de hace 1 minuto, 5 minutos y 15 minutos
+
+
+	PS
+
+		ps -e -opid,cputime,pmem,comm --sort -cputime -> Obtención de todos los procesos del sistema, con su PID, tiempo usado por la CPU, memoria usada, comando ejecutado. Todo ordenado por el tiempo de CPU de mayor a menor (Orden inverso)
+
+
+	VMSTAT
+
+		vmstat -a -n 3600 > /root/InfoSys -> Informe del sistema que incluye la memoria en uso y la no utilizada. El parámetro "n" indica el intervalo en el que se actualiza el informe en segundos, al poner 3600 se actualiza el informe del fichero "InfoSys" cada hora
+
+		vmstat -d -n 10 -> Informa cada 10 segundos acerca de los discos del sistema
+
+
+	TOP
+
+		top -> Da información del estado del sistema y uso de los recursos
+
+		top -u root -> Procesos interactivos del usuario root
+
+		top -p 8391 -> Información solo del proceso indicado	
+
+		top -d 10 -n 4 -> Imprime información cada 10 segundos (4 iteraciones)
+
+		top -o TIME -> Ordena los procesos mostrados por el tiempo de ejecución (Opción -o), si se indica -TIME ordena en orden inverso
+
+		top -> f -> Permite cambiar la configuración
+
+			-Flechas para mover
+
+			-Flecha derecha para elegir uno y moverlo
+
+			-d para mostrarlo o no mostrarlo
+
+			-q para quitar
+
+
+	SYSTEMCTL
+
+		systemctl -t service list-units -> Información acerca de los servicios del sistema
+
+		systemctl -t service list-units -all -> Lista todo
+
+		systemctl list-unit-files
+
+
+	TIME, NICE Y RENICE
+
+		time find / -perm +6000 1>/dev/null 2>&1 -exec sum{} \;& -> Imprime cuanto tiempo ha tardado en ejecutarse un comando
+
+		time nice -n -19 find / -perm +6000 1>/dev/null 2>&1 -exec sum{} \;& -> Se le da prioridad -19 al proceso lanzado (-20 es la mayor y 20 la menor)
+
+		renice -n 20 -p 11149 -> Se le da prioridad 20 (mínima) a un proceso que se está ejecutando con PID 11149
+
+
+	AT
+
+		at 12:00 13.12.22, at 21:30 -> Se entra en modo interactivo
+
+			mkdir /repaso
+
+			/home/danibz/Documentos/script.sh
+
+			ctrl + d -> Salir del programado interactivo
+
+		at -f "muchas_busquedas.sh 5" 13:02 13.12.22 -> Indicando un fichero
+
+		atq -> Ver cola de procesos programados
+
+		atrm 1 -> Borrado del proceso programado número 1
+
+
+
+
+
+
+*** Falta redactar crontab, cpio y dd ***
+
+
+*** man shadow, gshadow -> Explica los campos ***
+
+
+*** NOTA A PARTE ***
+
+Permiso por defecto fichero -> 666
+
+Permiso por defecto directorio -> 777
+
+umask -> 0022 (umask del root) -> Lo que aparezca en umask es lo que se le resta a los valores por defecto
+
+	Si root con umask 0022 crea un fichero, tendrá permisos 644
+
+	umask establece los permisos que tendrá un fichero o directorio dependiendo del umask especificado por el usuario
+
+*** NOTA A PARTE ***
